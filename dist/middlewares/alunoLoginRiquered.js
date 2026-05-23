@@ -16,7 +16,7 @@ exports. default = async (req, res, next) => {
     const dados = _jsonwebtoken2.default.verify(token, process.env.TOKEN_SECRET_USER);
     const { id, email } = dados;
 
-    const user = _Alunos2.default.findOne({
+    const user = await _Alunos2.default.findOne({
       where: {
         id,
         email,

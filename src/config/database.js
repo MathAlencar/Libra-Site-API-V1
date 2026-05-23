@@ -24,8 +24,6 @@ require('dotenv').config();
 
 const useSSL = process.env.DB_SSL === 'true';
 
-console.log(useSSL);
-
 module.exports = {
   dialect: 'mariadb',
   host: process.env.DATABASE_HOST,
@@ -43,18 +41,13 @@ module.exports = {
     timezone: '-03:00',
   },
 
-  // dialectOptions: useSSL
-  //   ? {
-  //       ssl: {
-  //         ca: process.env.DB_SSL_CA.replace(/\\n/g, '\n'),
-  //         rejectUnauthorized: true, // mantém validação do CA
-  //         checkServerIdentity: () => undefined, // ignora mismatch de hostname/SAN
-  //       },
-  //     }
-  //   : {},
-
-  dialectOptions: {
-  allowPublicKeyRetrieval: true,
-  ssl: false,
-  }
+  dialectOptions: useSSL
+    ? {
+        ssl: {
+          ca: process.env.DB_SSL_CA.replace(/\\n/g, '\n'),
+          rejectUnauthorized: true, // mantém validação do CA
+          checkServerIdentity: () => undefined, // ignora mismatch de hostname/SAN
+        },
+      }
+    : {},
 };

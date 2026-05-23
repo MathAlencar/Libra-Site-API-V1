@@ -13,6 +13,7 @@ var _personalRouter = require('./routes/personal/personalRouter'); var _personal
 var _personalTokenRoutes = require('./routes/personal/personalTokenRoutes'); var _personalTokenRoutes2 = _interopRequireDefault(_personalTokenRoutes);
 var _personalFotosRouter = require('./routes/personal/personalFotosRouter'); var _personalFotosRouter2 = _interopRequireDefault(_personalFotosRouter);
 var _personalAgendaRoutes = require('./routes/personal/personalAgendaRoutes'); var _personalAgendaRoutes2 = _interopRequireDefault(_personalAgendaRoutes);
+var _notificacaoRoutes = require('./routes/personal/notificacaoRoutes'); var _notificacaoRoutes2 = _interopRequireDefault(_notificacaoRoutes);
 var _alunosRoutes = require('./routes/alunos/alunosRoutes'); var _alunosRoutes2 = _interopRequireDefault(_alunosRoutes);
 var _alunosTokenRoutes = require('./routes/alunos/alunosTokenRoutes'); var _alunosTokenRoutes2 = _interopRequireDefault(_alunosTokenRoutes);
 var _alunosFotosRoutes = require('./routes/alunos/alunosFotosRoutes'); var _alunosFotosRoutes2 = _interopRequireDefault(_alunosFotosRoutes);
@@ -30,7 +31,7 @@ var _videoExercicioRoutes = require('./routes/ExerciciosPersonal/videoExercicioR
 
 // Rotas de pagamento
 var _clienteRoutes = require('./routes/pagamento/clienteRoutes'); var _clienteRoutes2 = _interopRequireDefault(_clienteRoutes);
-var _cobrancaRoutes = require('./routes/pagamento/cobrancaRoutes'); var _cobrancaRoutes2 = _interopRequireDefault(_cobrancaRoutes);
+var _checkoutRoutes = require('./routes/pagamento/checkoutRoutes'); var _checkoutRoutes2 = _interopRequireDefault(_checkoutRoutes);
 var _webhookRoutes = require('./routes/pagamento/webhookRoutes'); var _webhookRoutes2 = _interopRequireDefault(_webhookRoutes);  
   
 // Personal planos
@@ -73,6 +74,7 @@ class App {
     this.app.use('/alunos/', _alunosRoutes2.default);
     this.app.use('/alunos/foto/', _alunosFotosRoutes2.default);
     this.app.use('/personal/agenda/', _personalAgendaRoutes2.default);
+    this.app.use('/personal/notificacoes/', _notificacaoRoutes2.default);
     this.app.use('/personal/token/', _personalTokenRoutes2.default);
     this.app.use('/personal/foto/', _personalFotosRouter2.default);
     this.app.use('/personal/', _personalRouter2.default);
@@ -89,7 +91,7 @@ class App {
 
     // Pagamento
     this.app.use('/cliente/', _clienteRoutes2.default);
-    this.app.use('/cobranca/', _cobrancaRoutes2.default);
+    this.app.use('/checkout/', _checkoutRoutes2.default);
     this.app.use('/webhook/', _webhookRoutes2.default);
 
     // Plano

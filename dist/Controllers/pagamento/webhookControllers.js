@@ -2,7 +2,7 @@
 var _webhook_servicejs = require('../../services/pagamento/webhook_service.js'); var _webhook_servicejs2 = _interopRequireDefault(_webhook_servicejs);  
   
 const TOKENS = {  
-  payments: process.env.ASAAS_WEBHOOK_TOKEN_PAYMENTS,  
+  checkouts: process.env.ASAAS_WEBHOOK_TOKEN_CHECKOUTS,
   accountStatus: process.env.ASAAS_WEBHOOK_TOKEN_ACCOUNT_STATUS,  
   transfers: process.env.ASAAS_WEBHOOK_TOKEN_TRANSFERS,  
 };  
@@ -14,23 +14,23 @@ function validarToken(req, tokenEsperado) {
 }  
   
 class WebhookControllers {  
-  
-  async payments(req, res) {  
-    try {  
-      if (!validarToken(req, TOKENS.payments)) {  
-        console.error('Webhook payments: token inválido.');  
-        return res.status(401).json({ error: 'Token inválido.' });  
-      }  
-  
-      console.log('Webhook payments recebido:', JSON.stringify(req.body));  
-      await _webhook_servicejs2.default.processarPagamento(req.body);  
-  
-      return res.status(200).json({ ok: true });  
-    } catch (error) {  
-      console.error('Erro webhook payments:', error.message);  
-      return res.status(200).json({ ok: true });  
-    }  
-  }  
+
+  async checkouts(req, res) {
+    try {
+      if (!validarToken(req, TOKENS.checkouts)) {
+        console.error('Webhook checkouts: token inválido.');
+        return res.status(401).json({ error: 'Token inválido.' });
+      }
+
+      console.log('Webhook checkouts recebido:', JSON.stringify(req.body));
+      await _webhook_servicejs2.default.processarCheckout(req.body);
+
+      return res.status(200).json({ ok: true });
+    } catch (error) {
+      console.error('Erro webhook checkouts:', error.message);
+      return res.status(200).json({ ok: true });
+    }
+  }
   
   async accountStatus(req, res) {  
     try {  

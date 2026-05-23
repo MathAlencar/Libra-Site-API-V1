@@ -11,13 +11,12 @@ exports. default = async (req, res, next) => {
   }
 
   const [, token] = authorization.split(' ');
-  console.log(token);
 
   try {
     const dados = _jsonwebtoken2.default.verify(token, process.env.TOKEN_SECRET_USER);
     const { id, email } = dados;
 
-    const user = _Personal2.default.findOne({
+    const user = await _Personal2.default.findOne({
       where: {
         id,
         email,

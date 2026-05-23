@@ -23,6 +23,7 @@ var _videoExercicio = require('../Models/videoExercicio'); var _videoExercicio2 
 var _Subconta = require('../Models/Subconta'); var _Subconta2 = _interopRequireDefault(_Subconta);
 var _PlanosPersonal = require('../Models/PlanosPersonal'); var _PlanosPersonal2 = _interopRequireDefault(_PlanosPersonal);
 var _Cobranca = require('../Models/Cobranca'); var _Cobranca2 = _interopRequireDefault(_Cobranca);
+var _Notificacao = require('../Models/Notificacao'); var _Notificacao2 = _interopRequireDefault(_Notificacao);
 
 const models = [
   _Administrador2.default,
@@ -43,6 +44,7 @@ const models = [
   _Subconta2.default,
   _PlanosPersonal2.default,
   _Cobranca2.default,
+  _Notificacao2.default,
   _RGPersonal2.default,
   _DocumentoFotoPersonal2.default,
   _Diploma2.default

@@ -73,7 +73,7 @@ class PersonalControllers {
       if (expand && expand.includes('endereco')) {
         options.include.push({
           model: _Enderecos2.default,
-          attributes: ['id', 'personal_id', 'rua', 'numero', 'cidade', 'complemento', 'bairro', 'cidade', 'estado', 'cep'],
+          attributes: ['id', 'aluno_id', 'personal_id', 'rua', 'numero', 'complemento', 'bairro', 'cidade', 'estado', 'cep'],
           order: [['id', 'DESC']],
         });
       }
@@ -175,7 +175,7 @@ class PersonalControllers {
       if (expand && expand.includes('endereco')) {
         options.include.push({
           model: _Enderecos2.default,
-          attributes: ['id', 'personal_id', 'rua', 'numero,', 'cidade', 'complemento', 'bairro', 'cidade', 'estado', 'cep'],
+          attributes: ['id', 'aluno_id', 'personal_id', 'rua', 'numero', 'complemento', 'bairro', 'cidade', 'estado', 'cep'],
           order: [['id', 'DESC']],
         });
       }

@@ -3,7 +3,7 @@ var _webhookControllersjs = require('../../Controllers/pagamento/webhookControll
   
 const router = new (0, _express.Router)();  
   
-router.post('/asaas/payments', _webhookControllersjs2.default.payments);  
+router.post('/asaas/checkouts', _webhookControllersjs2.default.checkouts);
 router.post('/asaas/account-status', _webhookControllersjs2.default.accountStatus);  
 router.post('/asaas/transfers', _webhookControllersjs2.default.transfers);  
   

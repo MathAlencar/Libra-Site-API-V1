@@ -6,11 +6,12 @@ class PlanosPersonalController {
   // Cria um novo plano para um personal
   async store(req, res) {
     try {
-      const { personal_id, tipo_plano, valor } = req.body;
+      const { tipo_plano, valor } = req.body;
+      const personal_id = req.userID;
 
-      if (!personal_id || !tipo_plano || !valor) {
+      if (!tipo_plano || !valor) {
         return res.status(400).json({
-          errors: ['Campos obrigatórios: personal_id, tipo_plano e valor.'],
+          errors: ['Campos obrigatórios: tipo_plano e valor.'],
         });
       }
 

@@ -3,15 +3,41 @@ var _Subcontajs = require('../../Models/Subconta.js'); var _Subcontajs2 = _inter
 var _Alunosjs = require('../../Models/Alunos.js'); var _Alunosjs2 = _interopRequireDefault(_Alunosjs);  
 var _PlanosPersonaljs = require('../../Models/PlanosPersonal.js'); var _PlanosPersonaljs2 = _interopRequireDefault(_PlanosPersonaljs);  
 var _Cobrancajs = require('../../Models/Cobranca.js'); var _Cobrancajs2 = _interopRequireDefault(_Cobrancajs);  
+
+function somenteDigitos(valor) {
+  return String(valor || '').replace(/\D/g, '');
+}
+
+function montarCustomerDataAluno(aluno) {
+  const customerData = {
+    name: aluno.nome,
+    email: aluno.email,
+    cpfCnpj: somenteDigitos(aluno.cpf_cnpj),
+    phone: somenteDigitos(aluno.celular),
+  };
+
+  return Object.fromEntries(
+    Object.entries(customerData).filter(([, value]) => value),
+  );
+}
   
 class CheckoutControllers {  
   async store(req, res) {  
     try {  
-      const { alunoId, planoId } = req.body;  
+      const {
+        planoId,
+        billingTypes,
+        chargeTypes,
+        callback,
+        customer,
+        customerData,
+        usarDadosAluno = false,
+      } = req.body;
+      const alunoId = req.userID;
   
-      if (!alunoId || !planoId) {  
+      if (!planoId) {  
         return res.status(400).json({  
-          errors: ['Campos obrigatórios: alunoId e planoId.'],  
+          errors: ['Campo obrigatório: planoId.'],  
         });  
       }  
   
@@ -42,20 +68,30 @@ class CheckoutControllers {
         });  
       }  
   
-      // 4. Criar checkout no Asaas (sem customer, sem customerData)  
+      // 4. Criar checkout no Asaas
       const nomeCheckout = `${plano.tipo_plano} - Plano #${plano.id}`;  
-      const checkout = await _checkout_servicejs2.default.criarCheckout(  
-        nomeCheckout,  
-        plano.valor,  
-        subconta.wallet_id,  
-      );  
+      const checkoutCustomerData =
+        customerData || (usarDadosAluno ? montarCustomerDataAluno(aluno) : null);
+      const checkout = await _checkout_servicejs2.default.criarCheckout({
+        nome: nomeCheckout,
+        descricao: `Contratacao do plano ${plano.tipo_plano}`,
+        valor: plano.valor,
+        carteiraIdPersonal: subconta.wallet_id,
+        percentualPersonal: 90,
+        billingTypes,
+        chargeTypes,
+        externalReference: `aluno:${alunoId}|plano:${planoId}`,
+        callback,
+        customer,
+        customerData: customer ? null : checkoutCustomerData,
+      });
   
       // 5. Salvar registro na tabela Cobrancas  
       const cobranca = await _Cobrancajs2.default.create({  
         aluno_id: alunoId,  
         plano_id: planoId,  
         payment_link_id: checkout.id,  
-        checkout_url: checkout.url,  
+        checkout_url: checkout.checkoutUrl,  
         status: 'PENDING',  
         value: plano.valor,  
       });  
@@ -63,8 +99,10 @@ class CheckoutControllers {
       // 6. Retornar URL do checkout ao frontend  
       return res.status(201).json({  
         cobranca_id: cobranca.id,  
-        checkout_url: checkout.url,  
-        payment_link_id: checkout.id,  
+        checkout_id: checkout.id,
+        checkout_url: checkout.checkoutUrl,
+        payment_link_id: checkout.id,
+        status: checkout.status,
       });  
     } catch (e) {  
       console.error('Erro ao criar checkout:', e);  
@@ -76,6 +114,21 @@ class CheckoutControllers {
       });  
     }  
   }  
+
+  async show(req, res) {
+    try {
+      const { id } = req.params;
+      const checkout = await _checkout_servicejs2.default.consultarCheckout(id);
+
+      return res.status(200).json(checkout);
+    } catch (e) {
+      return res.status(400).json({
+        errors:
+          _optionalChain([e, 'access', _6 => _6.response, 'optionalAccess', _7 => _7.data, 'optionalAccess', _8 => _8.errors, 'optionalAccess', _9 => _9.map, 'call', _10 => _10((err) => err.description)]) ||
+          [e.message],
+      });
+    }
+  }
 }  
   
 exports. default = new CheckoutControllers();

@@ -44,7 +44,7 @@ const models = [
   Subconta,
   PlanosPersonal,
   Cobrancas,
-  Notificacao
+  Notificacao,
   RgPersonal,
   FotoValidacao,
   Diploma

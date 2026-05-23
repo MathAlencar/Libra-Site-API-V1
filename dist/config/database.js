@@ -24,8 +24,6 @@ require('dotenv').config();
 
 const useSSL = process.env.DB_SSL === 'true';
 
-console.log(useSSL);
-
 module.exports = {
   dialect: 'mariadb',
   host: process.env.DATABASE_HOST,
