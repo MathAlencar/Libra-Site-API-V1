@@ -7,6 +7,7 @@ import Enderecos from '../../Models/Enderecos';
 import DocumentoRG from '../../Models/RGPersonal';
 import FotoValidacao from '../../Models/DocumentoFotoPersonal';
 import Diploma from '../../Models/Diploma';
+import Subconta from '../../Models/Subconta';
 
 class PersonalControllers {
   async store(req, res) {
@@ -263,6 +264,116 @@ class PersonalControllers {
       });
     }
   }
+
+  async statusCadastro(req, res) {
+  try {
+    const personal = await Personal.findByPk(req.params.id, {
+      attributes: ['id', 'nome', 'email'],
+    });
+
+    if (!personal) {
+      return res.status(404).json({
+        errors: ['Personal não encontrado em nossa base de dados'],
+      });
+    }
+
+    const converterStatusDocumento = (registro) => {
+      if (!registro) return 'PENDENTE';
+
+      if (registro.status === 'Aprovado') return 'CONCLUIDO';
+
+      if (registro.status === 'Validação') return 'EM ANDAMENTO';
+
+      if (registro.status === 'Negado') return 'NEGADO';
+
+      return 'PENDENTE';
+    };
+
+    const converterStatusSubconta = (subconta) => {
+      if (!subconta) return 'PENDENTE';
+
+      const cadastroConcluido = subconta.status_cadastro === 'CONCLUIDO';
+      const aprovacaoConcluida = subconta.status_aprovacao === 'CONCLUIDO';
+      const recebimentoConcluido = subconta.status_recebimento === 'CONCLUIDO';
+
+      if (cadastroConcluido && aprovacaoConcluida && recebimentoConcluido) {
+        return 'CONCLUIDO';
+      }
+
+      return 'EM ANDAMENTO';
+    };
+
+    const [
+      possuiEndereco,
+      documentoRG,
+      fotoValidacao,
+      diploma,
+      possuiFotoPerfil,
+      subconta,
+    ] = await Promise.all([
+      Enderecos.count({
+        where: { personal_id: personal.id },
+      }),
+
+      DocumentoRG.findOne({
+        where: { personal_id: personal.id },
+        attributes: ['id', 'status'],
+        order: [['id', 'DESC']],
+      }),
+
+      FotoValidacao.findOne({
+        where: { personal_id: personal.id },
+        attributes: ['id', 'status'],
+        order: [['id', 'DESC']],
+      }),
+
+      Diploma.findOne({
+        where: { personal_id: personal.id },
+        attributes: ['id', 'status'],
+        order: [['id', 'DESC']],
+      }),
+
+      Foto.count({
+        where: { personal_id: personal.id },
+      }),
+
+      Subconta.findOne({
+        where: { personal_id: personal.id },
+        attributes: [
+          'id',
+          'personal_id',
+          'status_cadastro',
+          'status_aprovacao',
+          'status_recebimento',
+        ],
+        order: [['id', 'DESC']],
+      }),
+    ]);
+
+    const status = {
+      endereco: possuiEndereco > 0 ? 'CONCLUIDO' : 'PENDENTE',
+
+      'ativar-recebimento': converterStatusSubconta(subconta),
+
+      'cadastro-foto': possuiFotoPerfil > 0 ? 'CONCLUIDO' : 'PENDENTE',
+
+      'cadastro-documento': converterStatusDocumento(documentoRG),
+
+      'foto-validada': converterStatusDocumento(fotoValidacao),
+
+      'cadastro-diploma': converterStatusDocumento(diploma),
+    };
+
+    return res.status(200).json({
+      personal_id: personal.id,
+      status,
+    });
+  } catch (e) {
+    return res.status(400).json({
+      errors: e.errors?.map((err) => err.message) || [e.message],
+    });
+  }
+}
 }
 
 export default new PersonalControllers();
