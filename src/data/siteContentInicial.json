@@ -1,0 +1,68 @@
+{
+  "versao": 1,
+  "atualizadoEm": "2026-09-15T00:00:00.000Z",
+  "seo": {
+    "title": "Libra Crédito | Home Equity",
+    "description": "Crédito com imóvel em garantia. Taxa a partir de 1,19% ao mês + IPCA."
+  },
+  "cta": {
+    "simular": "#",
+    "whatsapp": "#",
+    "contato": "#"
+  },
+  "midias": {
+    "heroImageUrl": "",
+    "usecaseImageUrl": "",
+    "aboutImageUrl": "",
+    "sobreImageUrl": "",
+    "homeVideoUrl": "",
+    "depoimentoVideoUrl": "",
+    "testimonialImages": ["", "", ""]
+  },
+  "videos": {
+    "homeYoutubeOrUrl": "",
+    "depoimentoYoutubeOrUrl": ""
+  },
+  "politicas": {
+    "privacidadeTexto": "Política de Privacidade\n\nA Libra Crédito trata dados pessoais de acordo com a LGPD. Esta página pode ser editada pelo painel administrativo em texto puro.",
+    "cookiesTexto": "Política de Cookies\n\nUtilizamos cookies essenciais e, com o seu consentimento, cookies de marketing. Esta página pode ser editada pelo painel administrativo em texto puro."
+  },
+  "paginas": {
+    "home": {
+      "heroTitulo": "Crédito com o seu imóvel como garantia",
+      "heroSubtitulo": "Taxa a partir de 1,19% ao mês + IPCA.",
+      "ctaSimular": "Simular agora",
+      "videoEyebrow": "Assista",
+      "videoTitleBefore": "A Libra,",
+      "videoTitleEm": "em movimento"
+    },
+    "comoFunciona": {
+      "titulo": "Como funciona",
+      "subtitulo": "Simule, envie documentos e receba a proposta."
+    },
+    "porQue": {
+      "titulo": "Por que faz sentido",
+      "subtitulo": "Home equity para quem quer crédito com taxa mais baixa."
+    },
+    "aLibra": {
+      "titulo": "A Libra",
+      "subtitulo": "Crédito com imóvel em garantia, com atendimento próximo."
+    },
+    "parceiros": {
+      "titulo": "Parceiros",
+      "subtitulo": "Indique clientes e acompanhe as propostas."
+    },
+    "blog": {
+      "titulo": "Blog",
+      "subtitulo": "Conteúdo sobre crédito, imóvel e planejamento."
+    }
+  },
+  "depoimentos": [
+    {
+      "name": "Cliente",
+      "location": "São Paulo, SP",
+      "quote": "Consegui o crédito que precisava com clareza em cada etapa.",
+      "image": ""
+    }
+  ]
+}

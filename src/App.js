@@ -7,36 +7,14 @@ import './database';
 
 import cors from 'cors';
 import express from 'express';
-import AdminRoutes from './routes/administrador/administradorRoutes';
-import AdmintokenRoutes from './routes/administrador/TokenRoutes';
-import PersonalRoutes from './routes/personal/personalRouter';
-import tokenPersonalRoutes from './routes/personal/personalTokenRoutes';
-import PersonalFotoRoutes from './routes/personal/personalFotosRouter';
-import PersonalAgendaRoutes from './routes/personal/personalAgendaRoutes';
-import NotificacaoRoutes from './routes/personal/notificacaoRoutes';
-import AlunosRoutes from './routes/alunos/alunosRoutes';
-import tokenAlunosRoutes from './routes/alunos/alunosTokenRoutes';
-import AlunoFotosRoutes from './routes/alunos/alunosFotosRoutes';
-import AgendaRoutes from './routes/AgendaGeral/agendaRoutes';
-import EnderecosRoutes from './routes/enderecos/enredecosRoutes';
-import ChatRoutes from './routes/chat/chatRoutes';
-import DocumentoRoutes from './routes/personal/DocumentoRoutes';
-
-// Rotas de treino
-import ExerciciosPersonal from './routes/ExerciciosPersonal/ExerciciosPersonal';
-import PlanoTreinoRoutes from './routes/PlanoTreino/PlanoTreinoRoutes';
-import SessaoTreino from './routes/SessaoTreino/sessaoTreinoRoutes';
-import itemExercicioRoutes from './routes/itemExercicio/itemExercicioRoutes';
-import videoExercicioRoutes from './routes/ExerciciosPersonal/videoExercicioRoutes';
-
-// Rotas de pagamento
-import ClienteRoutes from './routes/pagamento/clienteRoutes';
-import CheckoutRoutes from './routes/pagamento/checkoutRoutes';
-import WebhookRoutes from './routes/pagamento/webhookRoutes';  
-  
-// Personal planos
-import PlanosPersonalRoutes from './routes/personal/planosPersonalRoutes';
-import SubContaRoutes from './routes/pagamento/subcontaRoutes';
+import tokenRoutes from './routes/admin/tokenRoutes';
+import adminRoutes from './routes/admin/adminRoutes';
+import adminBlogRoutes from './routes/admin/adminBlogRoutes';
+import adminLeadsRoutes from './routes/admin/adminLeadsRoutes';
+import conteudoRoutes from './routes/conteudo/conteudoRoutes';
+import uploadRoutes from './routes/upload/uploadRoutes';
+import blogRoutes from './routes/blog/blogRoutes';
+import leadsRoutes from './routes/leads/leadsRoutes';
 
 class App {
   constructor() {
@@ -46,20 +24,23 @@ class App {
   }
 
   middlewares() {
-    this.app.use(cors());
-    this.app.use(express.urlencoded({ extended: true }));
-    this.app.use(express.json());
-    // this.app.use(express.static(resolve(__dirname, 'upload')));
-    // this.app.use(express.static(resolve(__dirname, '..', 'upload', 'videos')));
-    // this.app.use(express.static(resolve(__dirname, '..', 'upload', 'images')));
+    const origins = (process.env.CORS_ORIGIN || 'http://localhost:5173')
+      .split(',')
+      .map((origin) => origin.trim())
+      .filter(Boolean);
 
-    // Vídeos em /videos/arquivo.mp4
+    this.app.use(cors({
+      origin: origins,
+      credentials: true,
+    }));
+    this.app.use(express.urlencoded({ extended: true }));
+    this.app.use(express.json({ limit: '2mb' }));
+
     this.app.use(
       '/videos',
       express.static(resolve(__dirname, '..', 'upload', 'videos')),
     );
 
-    // Imagens em /images/arquivo.jpg
     this.app.use(
       '/images',
       express.static(resolve(__dirname, '..', 'upload', 'images')),
@@ -67,36 +48,21 @@ class App {
   }
 
   routes() {
-    this.app.use('/admin/', AdminRoutes);
-    this.app.use('/enderecos/', EnderecosRoutes);
-    this.app.use('/token/', AdmintokenRoutes);
-    this.app.use('/alunos/token/', tokenAlunosRoutes);
-    this.app.use('/alunos/', AlunosRoutes);
-    this.app.use('/alunos/foto/', AlunoFotosRoutes);
-    this.app.use('/personal/agenda/', PersonalAgendaRoutes);
-    this.app.use('/personal/notificacoes/', NotificacaoRoutes);
-    this.app.use('/personal/token/', tokenPersonalRoutes);
-    this.app.use('/personal/foto/', PersonalFotoRoutes);
-    this.app.use('/personal/', PersonalRoutes);
-    this.app.use('/agenda/', AgendaRoutes);
-    this.app.use('/chat/', ChatRoutes);
-    this.app.use('/documento/', DocumentoRoutes);
+    this.app.get('/', (req, res) => {
+      res.json({
+        ok: true,
+        message: 'API Libra Crédito',
+      });
+    });
 
-    // Treino
-    this.app.use('/exercicios/', ExerciciosPersonal);
-    this.app.use('/exercicios/video/', videoExercicioRoutes);
-    this.app.use('/plano/', PlanoTreinoRoutes);
-    this.app.use('/sessao/treino/', SessaoTreino);
-    this.app.use('/item/exercicio/', itemExercicioRoutes);
-
-    // Pagamento
-    this.app.use('/cliente/', ClienteRoutes);
-    this.app.use('/checkout/', CheckoutRoutes);
-    this.app.use('/webhook/', WebhookRoutes);
-
-    // Plano
-    this.app.use('/personal/planos/', PlanosPersonalRoutes);
-    this.app.use('/subconta/', SubContaRoutes);
+    this.app.use('/token', tokenRoutes);
+    this.app.use('/admin/blog', adminBlogRoutes);
+    this.app.use('/admin/leads', adminLeadsRoutes);
+    this.app.use('/admin', adminRoutes);
+    this.app.use('/conteudo', conteudoRoutes);
+    this.app.use('/upload', uploadRoutes);
+    this.app.use('/blog', blogRoutes);
+    this.app.use('/leads', leadsRoutes);
   }
 }
 

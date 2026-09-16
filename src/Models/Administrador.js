@@ -1,12 +1,6 @@
 import Sequelize, { Model } from 'sequelize';
 import bcrypt from 'bcrypt';
 
-/*
-Neste arquivo realizamos as configurações das colunas de dados da nossa tabela.
-Sua função envolve a validação de dados inputados, assim como o manuseio da senha que será enviada ao banco de dados via Hash.
-O hook abaixo irá manipular uma variável virtual (não salva no banco de dados), que armazenará a senha temporariamente.
-*/
-
 export default class Administrador extends Model {
   static init(sequelize) {
     super.init({
@@ -33,7 +27,7 @@ export default class Administrador extends Model {
         },
       },
       password_hash: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         defaultValue: '',
       },
       password: {
@@ -60,7 +54,6 @@ export default class Administrador extends Model {
     return this;
   }
 
-  // Função responsável por realizar a validação do usuário.
   passwordIsValida(password) {
     return bcrypt.compare(password, this.password_hash);
   }
