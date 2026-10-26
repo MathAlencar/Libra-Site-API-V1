@@ -15,6 +15,25 @@ npm run dev
 
 API na porta **3018**. Front Vite: `http://localhost:5173`.
 
+## Produção (PM2 + Nginx)
+
+No servidor, na pasta do projeto:
+
+```bash
+cp .env.example .env
+# edite .env: banco, TOKEN_SECRET_ADMIN, PORT, HOST=0.0.0.0, CORS_ORIGIN e URL
+
+npm install
+npx sequelize db:migrate
+npx sequelize db:seed:all
+npm run build
+pm2 start ecosystem.config.js
+pm2 save
+pm2 startup
+```
+
+A API sobe em `0.0.0.0:3018` (ou a `PORT` do `.env`). Nginx: use `deploy/nginx.conf.example`, depois `nginx -t` e reload. Health check: `GET /health`.
+
 ## Seed do admin
 
 - email: `admin@libracredito.com.br`

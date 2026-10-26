@@ -1,3 +1,9 @@
 node_modules
 .env
 dist
+backups
+upload/images/*
+!upload/images/.gitkeep
+upload/videos/*
+!upload/videos/.gitkeep
+

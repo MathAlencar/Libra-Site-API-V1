@@ -1,7 +1,8 @@
 import dotenv from 'dotenv';
+import { mkdirSync } from 'fs';
 import { resolve } from 'path';
 
-dotenv.config();
+dotenv.config({ path: resolve(__dirname, '..', '.env') });
 
 import './database';
 
@@ -16,6 +17,10 @@ import uploadRoutes from './routes/upload/uploadRoutes';
 import blogRoutes from './routes/blog/blogRoutes';
 import leadsRoutes from './routes/leads/leadsRoutes';
 
+const uploadRoot = resolve(__dirname, '..', 'upload');
+mkdirSync(resolve(uploadRoot, 'images'), { recursive: true });
+mkdirSync(resolve(uploadRoot, 'videos'), { recursive: true });
+
 class App {
   constructor() {
     this.app = express();
@@ -24,6 +29,8 @@ class App {
   }
 
   middlewares() {
+    this.app.set('trust proxy', 1);
+
     const origins = (process.env.CORS_ORIGIN || 'http://localhost:5173')
       .split(',')
       .map((origin) => origin.trim())
@@ -38,12 +45,12 @@ class App {
 
     this.app.use(
       '/videos',
-      express.static(resolve(__dirname, '..', 'upload', 'videos')),
+      express.static(resolve(uploadRoot, 'videos')),
     );
 
     this.app.use(
       '/images',
-      express.static(resolve(__dirname, '..', 'upload', 'images')),
+      express.static(resolve(uploadRoot, 'images')),
     );
   }
 
@@ -53,6 +60,10 @@ class App {
         ok: true,
         message: 'API Libra Crédito',
       });
+    });
+
+    this.app.get('/health', (req, res) => {
+      res.status(200).json({ ok: true });
     });
 
     this.app.use('/token', tokenRoutes);
